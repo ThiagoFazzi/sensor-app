@@ -1,0 +1,21 @@
+{
+  "name": "sensor-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "nodemon": "^1.18.5",
+    "axios": "^0.18.0"
+  },
+  "scripts": {
+    "start": "nodemon ."
+  },
+  "devDependencies": {
+    "@google-cloud/nodejs-repo-tools": "^2.3.5"
+  },
+  "engines": {
+    "node": ">=8"
+  }
+}
