@@ -3,7 +3,7 @@ const axios = require('axios');
 var oldTemperature = 0
 
 setInterval(() => {
-    const newTempperature = temperature(0,2)
+    const newTempperature = temperature(0,10)
     if(newTempperature !== oldTemperature )
     //axios.post('https://test-api-221311.appspot.com/sensor', {
     axios.post('http://localhost:8080/sensor', {
