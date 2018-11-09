@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const createSensor = (macAddres, type, min, max) => {
+const createSensor = (macAddres, type, interval, min, max) => {
 
   var oldTemperature = 0
 
@@ -15,7 +15,9 @@ const createSensor = (macAddres, type, min, max) => {
       if(sensor.id === null){
         axios.post('http://localhost:8080/sensor/new', {
           macAddres: macAddres,
-          type: type
+          type: type,
+          status: 'initialized',
+          created: new Date()
         })
         .then((response)=> {
           console.log(response.data.sensor)
@@ -26,27 +28,28 @@ const createSensor = (macAddres, type, min, max) => {
             created: response.data.sensor.created
           }
         })
-        .catch((error) => console.log(error))
+        .catch((error) => console.log(error.message))
       } else {
-
-        const newTempperature = temperature(min,max)
+        const newTempperature = temperature(min,max).toString()
         if(newTempperature !== oldTemperature )
         //axios.post('https://test-api-221311.appspot.com/sensor', {
-        axios.post('http://localhost:8080/sensor', {
-          id: sensor.id,
-          status: sensor.status,
+        axios.patch(`http://localhost:8080/sensor/${sensor.id}`, {
+          status: 'online',
           value: newTempperature,
-          type: type
+          date: new Date()
         })
-        .then(response => console.log(macAddres, response.data))
-        .catch(error => console.log(error))
+        .then(response => console.log(sensor.id, response.data.value))
+        .catch(error => console.log(error.message))
         
         oldTemperature = newTempperature
       }
-  }, 1000);
+  }, interval);
 }
 
-const temperature = (min, max) => Math.floor(Math.random()*(max-min)+min);
+//const temperature = (max) => Math.floor(Math.random()*max);
+const temperature = (min,max) => Math.floor(Math.random()*(max-min)+min);
 
-createSensor('00-00-00-00-00-FF', 'Temperature', 0, 10)
-createSensor('00-00-00-00-FF-FF', 'Umit',0,100)
+//Promise.resolve(createSensor('00-00-00-00-00-FF', 'Temperature',2000,10, 100))
+createSensor('00-00-00-00-00-FF', 'Temperature',2000,10, 100)
+//Promise.resolve(createSensor('00-00-00-00-FF-FF', 'Umit' ,3000, 90, 100))
+createSensor('00-00-00-00-FF-FF', 'Umit' ,3000, 90, 100)
